@@ -100,3 +100,6 @@ $string['rule_classeshavelicense'] = 'All classes have @license tag';
 $string['error_classeshavelicense'] = 'Class <b>{$a->object}</b> does not have @license tag';
 $string['rule_filehaslicense'] = 'Files have @license tag';
 $string['error_filehaslicense'] = 'File-level phpdocs block does not have @license tag';
+
+$string['rule_php4constructordeprecated'] = 'PHP4-style constructors are deprecated';
+$string['error_php4constructordeprecated'] = 'PHP4-style constructor <b>{$a->function}()</b> must be deprecated';

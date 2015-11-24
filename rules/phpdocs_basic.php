@@ -47,6 +47,7 @@ local_moodlecheck_registry::add_rule('phpdocsnotrecommendedtag')->set_callback('
 local_moodlecheck_registry::add_rule('phpdocsinvalidpathtag')->set_callback('local_moodlecheck_phpdocsinvalidpathtag')->set_severity('warning');;
 local_moodlecheck_registry::add_rule('phpdocsinvalidinlinetag')->set_callback('local_moodlecheck_phpdocsinvalidinlinetag');
 local_moodlecheck_registry::add_rule('phpdocsuncurlyinlinetag')->set_callback('local_moodlecheck_phpdocsuncurlyinlinetag');
+local_moodlecheck_registry::add_rule('php4constructordeprecated')->set_callback('local_moodlecheck_php4constructordeprecated');
 
 /**
  * Checks if the first line in the file has open tag and second line is not empty
@@ -498,6 +499,27 @@ function local_moodlecheck_classeshavelicense(local_moodlecheck_file $file) {
                 'line' => $class->phpdocs->get_line_number($file, '@license'),
                 'object' => $class->name
             );
+        }
+    }
+    return $errors;
+}
+
+/**
+ * Check that PHP4-style constructors are deprecated
+ *
+ * @param local_moodlecheck_file $file
+ * @return array of found errors
+ */
+function local_moodlecheck_php4constructordeprecated(local_moodlecheck_file $file) {
+    $errors = array();
+    foreach ($file->get_functions() as $function) {
+        if ($function->class && $function->class->name === $function->name) {
+            if (!$function->phpdocs || !count($function->phpdocs->get_tags('deprecated'))) {
+                $errors[] = array(
+                    'function' => $function->fullname,
+                    'line' => $file->get_line_number($function->boundaries[0]),
+                );
+            }
         }
     }
     return $errors;
